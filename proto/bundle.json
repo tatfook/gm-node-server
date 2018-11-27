@@ -1,0 +1,1393 @@
+{
+  "nested": {
+    "CSMessageConst": {
+      "values": {
+        "CS_MSG_MIN_SIZE": 10,
+        "CS_MSG_MAX_SIZE": 205537
+      }
+    },
+    "CSMessageHeader": {
+      "fields": {
+        "msg_name": {
+          "rule": "required",
+          "type": "bytes",
+          "id": 1
+        },
+        "errcode": {
+          "type": "uint32",
+          "id": 2
+        },
+        "gateway_session": {
+          "type": "uint64",
+          "id": 3
+        },
+        "seq_num": {
+          "type": "uint32",
+          "id": 4
+        }
+      }
+    },
+    "gms": {
+      "nested": {
+        "GMCheckSessionReq": {
+          "fields": {
+            "name": {
+              "rule": "required",
+              "type": "bytes",
+              "id": 1
+            }
+          }
+        },
+        "GMCheckSessionRsp": {
+          "fields": {
+            "random_bytes": {
+              "rule": "required",
+              "type": "bytes",
+              "id": 1
+            }
+          }
+        },
+        "GMLoginReq": {
+          "fields": {
+            "random_bytes": {
+              "rule": "required",
+              "type": "bytes",
+              "id": 1
+            },
+            "encrypt_bytes": {
+              "rule": "required",
+              "type": "bytes",
+              "id": 2
+            }
+          }
+        },
+        "GMLoginRsp": {
+          "fields": {
+            "gid": {
+              "type": "uint32",
+              "id": 1
+            }
+          }
+        },
+        "GMGetLastVersionReq": {
+          "fields": {}
+        },
+        "GMGetLastVersionRsp": {
+          "fields": {
+            "field1": {
+              "rule": "required",
+              "type": "uint32",
+              "id": 1
+            },
+            "field2": {
+              "rule": "required",
+              "type": "uint32",
+              "id": 2
+            },
+            "field3": {
+              "rule": "required",
+              "type": "uint32",
+              "id": 3
+            },
+            "field4": {
+              "rule": "required",
+              "type": "uint32",
+              "id": 4
+            }
+          }
+        },
+        "GMGetAllServerListReq": {
+          "fields": {}
+        },
+        "ServerBase": {
+          "fields": {
+            "id": {
+              "rule": "required",
+              "type": "uint32",
+              "id": 1
+            },
+            "ip": {
+              "rule": "required",
+              "type": "bytes",
+              "id": 2
+            },
+            "port": {
+              "rule": "required",
+              "type": "uint32",
+              "id": 3
+            },
+            "zone_id": {
+              "rule": "required",
+              "type": "uint32",
+              "id": 4
+            },
+            "server_type": {
+              "rule": "required",
+              "type": "uint32",
+              "id": 5
+            }
+          }
+        },
+        "GMGetAllServerListRsp": {
+          "fields": {
+            "server_items": {
+              "rule": "repeated",
+              "type": "ServerBase",
+              "id": 1
+            }
+          }
+        },
+        "GMGetWorkAllServerListReq": {
+          "fields": {}
+        },
+        "ServerConfig": {
+          "fields": {
+            "id": {
+              "rule": "required",
+              "type": "uint32",
+              "id": 1
+            },
+            "gateway": {
+              "rule": "required",
+              "type": "ServerBase",
+              "id": 2
+            },
+            "online": {
+              "rule": "required",
+              "type": "ServerBase",
+              "id": 3
+            },
+            "logic_id": {
+              "rule": "required",
+              "type": "uint32",
+              "id": 4
+            },
+            "logic_name": {
+              "rule": "required",
+              "type": "bytes",
+              "id": 5
+            },
+            "status": {
+              "rule": "required",
+              "type": "uint32",
+              "id": 6
+            },
+            "open_time": {
+              "type": "uint32",
+              "id": 7
+            },
+            "max_online_number": {
+              "rule": "required",
+              "type": "uint32",
+              "id": 8
+            },
+            "max_all_number": {
+              "rule": "required",
+              "type": "uint32",
+              "id": 9
+            }
+          }
+        },
+        "GMGetWorkServerListRsp": {
+          "fields": {
+            "server_configs": {
+              "rule": "repeated",
+              "type": "ServerConfig",
+              "id": 1
+            }
+          }
+        },
+        "GMGetServerRegisterNumberReq": {
+          "fields": {
+            "server_ids": {
+              "rule": "repeated",
+              "type": "uint32",
+              "id": 1,
+              "options": {
+                "packed": false
+              }
+            }
+          }
+        },
+        "GMGetServerRegisterNumberRsp": {
+          "fields": {
+            "number_pair": {
+              "rule": "repeated",
+              "type": "NumberPair",
+              "id": 1
+            }
+          },
+          "nested": {
+            "NumberPair": {
+              "fields": {
+                "server_id": {
+                  "rule": "required",
+                  "type": "uint32",
+                  "id": 1
+                },
+                "register_number": {
+                  "rule": "required",
+                  "type": "uint32",
+                  "id": 2
+                }
+              }
+            }
+          }
+        },
+        "GMGetOnlineInSwitchReq": {
+          "fields": {
+            "server_ids": {
+              "rule": "repeated",
+              "type": "uint32",
+              "id": 1,
+              "options": {
+                "packed": false
+              }
+            }
+          }
+        },
+        "GMGetOnlineInSwitchRsp": {
+          "fields": {
+            "servers": {
+              "rule": "repeated",
+              "type": "ServerBase",
+              "id": 1
+            }
+          },
+          "nested": {
+            "ServerBase": {
+              "fields": {
+                "ip": {
+                  "rule": "required",
+                  "type": "bytes",
+                  "id": 1
+                },
+                "port": {
+                  "rule": "required",
+                  "type": "uint32",
+                  "id": 2
+                },
+                "server_id": {
+                  "rule": "required",
+                  "type": "uint32",
+                  "id": 3
+                },
+                "status": {
+                  "rule": "required",
+                  "type": "ServerStatus",
+                  "id": 4
+                },
+                "online_number": {
+                  "rule": "required",
+                  "type": "uint32",
+                  "id": 5
+                }
+              },
+              "nested": {
+                "ServerStatus": {
+                  "values": {
+                    "NORMAL": 1,
+                    "DISCONNECT": 2
+                  }
+                }
+              }
+            }
+          }
+        },
+        "GMQueryUserReq": {
+          "fields": {
+            "players": {
+              "rule": "required",
+              "type": "PlayerIn",
+              "id": 1
+            }
+          },
+          "nested": {
+            "PlayerIn": {
+              "fields": {
+                "uid": {
+                  "rule": "required",
+                  "type": "uint32",
+                  "id": 1
+                },
+                "channel": {
+                  "type": "uint32",
+                  "id": 2
+                }
+              }
+            }
+          }
+        },
+        "GMQueryUserRsp": {
+          "fields": {
+            "uid": {
+              "rule": "required",
+              "type": "uint32",
+              "id": 1
+            },
+            "channel": {
+              "type": "uint32",
+              "id": 2
+            },
+            "server_ids": {
+              "rule": "repeated",
+              "type": "uint32",
+              "id": 3,
+              "options": {
+                "packed": false
+              }
+            }
+          }
+        },
+        "GMQueryUserOnlineReq": {
+          "fields": {
+            "players": {
+              "rule": "repeated",
+              "type": "PlayerIn",
+              "id": 1
+            }
+          },
+          "nested": {
+            "PlayerIn": {
+              "fields": {
+                "uid": {
+                  "rule": "required",
+                  "type": "uint32",
+                  "id": 1
+                },
+                "channel": {
+                  "type": "uint32",
+                  "id": 2
+                }
+              }
+            }
+          }
+        },
+        "GMQueryUserOnlineRsp": {
+          "fields": {
+            "players": {
+              "rule": "repeated",
+              "type": "PlayerOut",
+              "id": 1
+            }
+          },
+          "nested": {
+            "PlayerOut": {
+              "fields": {
+                "uid": {
+                  "rule": "required",
+                  "type": "uint32",
+                  "id": 1
+                },
+                "channel": {
+                  "type": "uint32",
+                  "id": 2
+                },
+                "server_id": {
+                  "rule": "required",
+                  "type": "uint32",
+                  "id": 3
+                },
+                "player_status": {
+                  "rule": "required",
+                  "type": "PlayerStatus",
+                  "id": 4
+                }
+              },
+              "nested": {
+                "PlayerStatus": {
+                  "values": {
+                    "PLAYER_KICKING": 1,
+                    "PLAYER_NORMAL": 2,
+                    "PLAYER_KICKING_ALL": 3,
+                    "PLAYER_OFFLINE": 4
+                  }
+                }
+              }
+            }
+          }
+        },
+        "GMQueryAllUserBaseInfoOnlineReq": {
+          "fields": {
+            "server_id": {
+              "rule": "required",
+              "type": "uint32",
+              "id": 1
+            }
+          }
+        },
+        "GMQueryAllUserBaseInfoOnlineRsp": {
+          "fields": {
+            "server_id": {
+              "rule": "required",
+              "type": "uint32",
+              "id": 1
+            },
+            "players": {
+              "rule": "repeated",
+              "type": "Player",
+              "id": 2
+            }
+          },
+          "nested": {
+            "Player": {
+              "fields": {
+                "uid": {
+                  "rule": "required",
+                  "type": "uint32",
+                  "id": 1
+                },
+                "channel": {
+                  "type": "uint32",
+                  "id": 2
+                },
+                "status": {
+                  "rule": "required",
+                  "type": "uint32",
+                  "id": 3
+                }
+              }
+            }
+          }
+        },
+        "GMKickUserReq": {
+          "fields": {
+            "uid": {
+              "rule": "required",
+              "type": "uint32",
+              "id": 1
+            },
+            "channel": {
+              "type": "uint32",
+              "id": 2
+            }
+          }
+        },
+        "GMKickedRsp": {
+          "fields": {
+            "uid": {
+              "rule": "required",
+              "type": "uint32",
+              "id": 1
+            },
+            "channel": {
+              "type": "uint32",
+              "id": 2
+            },
+            "server_id": {
+              "rule": "required",
+              "type": "uint32",
+              "id": 3
+            }
+          }
+        },
+        "GMQueryOnlineUserInfoReq": {
+          "fields": {
+            "uid": {
+              "rule": "required",
+              "type": "uint32",
+              "id": 1
+            },
+            "channel": {
+              "type": "uint32",
+              "id": 2
+            },
+            "response_fd": {
+              "type": "uint32",
+              "id": 3
+            },
+            "response_id": {
+              "type": "uint32",
+              "id": 4
+            }
+          }
+        },
+        "GMQueryOnlineUserInfoRsp": {
+          "fields": {
+            "player": {
+              "type": "Player",
+              "id": 1
+            },
+            "response_fd": {
+              "type": "uint32",
+              "id": 2
+            },
+            "response_id": {
+              "type": "uint32",
+              "id": 3
+            }
+          },
+          "nested": {
+            "Player": {
+              "fields": {
+                "uid": {
+                  "rule": "required",
+                  "type": "uint32",
+                  "id": 1
+                },
+                "channel": {
+                  "type": "uint32",
+                  "id": 2
+                },
+                "sex": {
+                  "type": "uint32",
+                  "id": 3
+                },
+                "seq": {
+                  "type": "uint32",
+                  "id": 4
+                },
+                "zone_id": {
+                  "type": "uint32",
+                  "id": 5
+                },
+                "client_seq": {
+                  "type": "uint32",
+                  "id": 6
+                },
+                "skin_id": {
+                  "type": "uint32",
+                  "id": 7
+                },
+                "reg_time": {
+                  "type": "uint32",
+                  "id": 8
+                },
+                "gateway_session": {
+                  "type": "uint64",
+                  "id": 9
+                },
+                "x": {
+                  "type": "double",
+                  "id": 10
+                },
+                "y": {
+                  "type": "double",
+                  "id": 11
+                },
+                "z": {
+                  "type": "double",
+                  "id": 12
+                },
+                "row": {
+                  "type": "uint32",
+                  "id": 13
+                },
+                "col": {
+                  "type": "uint32",
+                  "id": 14
+                },
+                "facing": {
+                  "type": "double",
+                  "id": 15
+                },
+                "pitch": {
+                  "type": "double",
+                  "id": 16
+                },
+                "anim_id": {
+                  "type": "uint32",
+                  "id": 17
+                },
+                "flag_pos": {
+                  "type": "uint32",
+                  "id": 18
+                },
+                "nick": {
+                  "type": "bytes",
+                  "id": 19
+                },
+                "fd": {
+                  "type": "int32",
+                  "id": 20
+                },
+                "fd_id": {
+                  "type": "uint32",
+                  "id": 21
+                },
+                "player_status": {
+                  "type": "uint32",
+                  "id": 23
+                },
+                "login_time": {
+                  "type": "uint32",
+                  "id": 24
+                },
+                "total_time": {
+                  "type": "uint32",
+                  "id": 25
+                },
+                "room_id": {
+                  "type": "uint64",
+                  "id": 26
+                },
+                "limits_bit": {
+                  "type": "uint32",
+                  "id": 27
+                },
+                "other_gateway_session": {
+                  "type": "uint64",
+                  "id": 28
+                }
+              }
+            }
+          }
+        },
+        "GMGetTunnelServerInfoReq": {
+          "fields": {
+            "keys": {
+              "rule": "repeated",
+              "type": "ServerKey",
+              "id": 1
+            }
+          },
+          "nested": {
+            "ServerKey": {
+              "fields": {
+                "ip": {
+                  "rule": "required",
+                  "type": "bytes",
+                  "id": 1
+                },
+                "port": {
+                  "rule": "required",
+                  "type": "uint32",
+                  "id": 2
+                }
+              }
+            }
+          }
+        },
+        "GMGetTunnelServerInfoRsp": {
+          "fields": {
+            "servers": {
+              "rule": "repeated",
+              "type": "TunnelServer",
+              "id": 1
+            }
+          },
+          "nested": {
+            "Room": {
+              "fields": {
+                "room_id": {
+                  "rule": "required",
+                  "type": "uint64",
+                  "id": 1
+                },
+                "register_number": {
+                  "rule": "required",
+                  "type": "uint32",
+                  "id": 2
+                },
+                "online_number": {
+                  "rule": "required",
+                  "type": "uint32",
+                  "id": 3
+                },
+                "own_uid": {
+                  "rule": "required",
+                  "type": "uint32",
+                  "id": 4
+                }
+              }
+            },
+            "TunnelServer": {
+              "fields": {
+                "ip": {
+                  "rule": "required",
+                  "type": "bytes",
+                  "id": 1
+                },
+                "port": {
+                  "rule": "required",
+                  "type": "uint32",
+                  "id": 2
+                },
+                "number": {
+                  "type": "uint32",
+                  "id": 3
+                },
+                "rooms": {
+                  "rule": "repeated",
+                  "type": "Room",
+                  "id": 4
+                }
+              }
+            }
+          }
+        },
+        "GMPushMessageReq": {
+          "fields": {
+            "push_message": {
+              "rule": "required",
+              "type": "bytes",
+              "id": 1
+            },
+            "server_ids": {
+              "rule": "repeated",
+              "type": "uint32",
+              "id": 2,
+              "options": {
+                "packed": false
+              }
+            }
+          }
+        },
+        "GMPushMessageRsp": {
+          "fields": {}
+        },
+        "GMGetAllServerRoomReq": {
+          "fields": {
+            "server_id": {
+              "rule": "required",
+              "type": "uint32",
+              "id": 1
+            },
+            "response_fd": {
+              "type": "uint32",
+              "id": 2
+            },
+            "response_id": {
+              "type": "uint32",
+              "id": 3
+            }
+          }
+        },
+        "GMGetAllServerRoomRsp": {
+          "fields": {
+            "room_ids": {
+              "rule": "repeated",
+              "type": "uint64",
+              "id": 1,
+              "options": {
+                "packed": false
+              }
+            },
+            "response_fd": {
+              "type": "uint32",
+              "id": 2
+            },
+            "response_id": {
+              "type": "uint32",
+              "id": 3
+            }
+          }
+        },
+        "GMGetRoomInfoReq": {
+          "fields": {
+            "server_id": {
+              "rule": "required",
+              "type": "uint32",
+              "id": 1
+            },
+            "room_id": {
+              "rule": "required",
+              "type": "uint64",
+              "id": 2
+            },
+            "response_fd": {
+              "type": "uint32",
+              "id": 3
+            },
+            "response_id": {
+              "type": "uint32",
+              "id": 4
+            }
+          }
+        },
+        "GMGetRoomInfoRsp": {
+          "fields": {
+            "room_id": {
+              "rule": "required",
+              "type": "uint64",
+              "id": 1
+            },
+            "room_name": {
+              "rule": "required",
+              "type": "bytes",
+              "id": 2
+            },
+            "res_id": {
+              "rule": "required",
+              "type": "uint32",
+              "id": 3
+            },
+            "max_mem_num": {
+              "rule": "required",
+              "type": "uint32",
+              "id": 4
+            },
+            "password": {
+              "type": "bytes",
+              "id": 5,
+              "options": {
+                "default": ""
+              }
+            },
+            "owner_uid": {
+              "rule": "required",
+              "type": "uint32",
+              "id": 6
+            },
+            "owner_channel": {
+              "type": "uint32",
+              "id": 7,
+              "options": {
+                "default": 0
+              }
+            },
+            "limits_bit": {
+              "type": "uint32",
+              "id": 8,
+              "options": {
+                "default": 0
+              }
+            },
+            "cur_mem_num": {
+              "type": "uint32",
+              "id": 9,
+              "options": {
+                "default": 0
+              }
+            },
+            "create_time": {
+              "type": "uint32",
+              "id": 10,
+              "options": {
+                "default": 0
+              }
+            },
+            "members": {
+              "rule": "repeated",
+              "type": "Member",
+              "id": 11
+            },
+            "response_fd": {
+              "type": "uint32",
+              "id": 12
+            },
+            "response_id": {
+              "type": "uint32",
+              "id": 13
+            }
+          },
+          "nested": {
+            "Member": {
+              "fields": {
+                "uid": {
+                  "rule": "required",
+                  "type": "uint32",
+                  "id": 1
+                },
+                "channel": {
+                  "type": "uint32",
+                  "id": 2,
+                  "options": {
+                    "default": 0
+                  }
+                },
+                "nick": {
+                  "type": "bytes",
+                  "id": 3,
+                  "options": {
+                    "default": ""
+                  }
+                }
+              }
+            }
+          }
+        },
+        "GMGetPlayerCraftInfoReq": {
+          "fields": {
+            "uid": {
+              "rule": "required",
+              "type": "uint32",
+              "id": 1
+            },
+            "channel": {
+              "type": "uint32",
+              "id": 2,
+              "options": {
+                "default": 0
+              }
+            },
+            "response_fd": {
+              "type": "uint32",
+              "id": 3
+            },
+            "response_id": {
+              "type": "uint32",
+              "id": 4
+            }
+          }
+        },
+        "GMGetPlayerCraftInfoRsp": {
+          "fields": {
+            "crafts": {
+              "rule": "repeated",
+              "type": "CraftInfo",
+              "id": 1
+            },
+            "cur_craft_uid": {
+              "type": "uint64",
+              "id": 2
+            },
+            "response_fd": {
+              "type": "uint32",
+              "id": 3
+            },
+            "response_id": {
+              "type": "uint32",
+              "id": 4
+            }
+          },
+          "nested": {
+            "CraftAccess": {
+              "values": {
+                "VIEW_ALL_PLAYERS": 1,
+                "VIEW_ONLY_FRIENDS": 2,
+                "VIEW_ONLY_ONESELF": 3
+              }
+            },
+            "CraftInfo": {
+              "fields": {
+                "craft_uid": {
+                  "rule": "required",
+                  "type": "uint64",
+                  "id": 1
+                },
+                "res_id": {
+                  "rule": "required",
+                  "type": "uint32",
+                  "id": 2
+                },
+                "craft_name": {
+                  "rule": "required",
+                  "type": "bytes",
+                  "id": 3
+                },
+                "create_time": {
+                  "type": "uint32",
+                  "id": 4
+                },
+                "visit_count": {
+                  "type": "uint32",
+                  "id": 5
+                },
+                "duration": {
+                  "type": "uint32",
+                  "id": 6
+                },
+                "access": {
+                  "type": "CraftAccess",
+                  "id": 7
+                },
+                "review_num": {
+                  "type": "uint32",
+                  "id": 8
+                }
+              }
+            }
+          }
+        },
+        "Friend": {
+          "fields": {
+            "uid": {
+              "rule": "required",
+              "type": "uint32",
+              "id": 1
+            },
+            "channel": {
+              "type": "uint32",
+              "id": 2
+            }
+          }
+        },
+        "GMGetFriendListReq": {
+          "fields": {
+            "uid": {
+              "rule": "required",
+              "type": "uint32",
+              "id": 1
+            },
+            "channel": {
+              "type": "uint32",
+              "id": 2,
+              "options": {
+                "default": 0
+              }
+            },
+            "response_fd": {
+              "type": "uint32",
+              "id": 3
+            },
+            "response_id": {
+              "type": "uint32",
+              "id": 4
+            }
+          }
+        },
+        "GMGetFriendListRsp": {
+          "fields": {
+            "friend_list": {
+              "rule": "repeated",
+              "type": "Friend",
+              "id": 1
+            },
+            "response_fd": {
+              "type": "uint32",
+              "id": 2
+            },
+            "response_id": {
+              "type": "uint32",
+              "id": 3
+            }
+          }
+        },
+        "GMGetBlackListReq": {
+          "fields": {
+            "uid": {
+              "rule": "required",
+              "type": "uint32",
+              "id": 1
+            },
+            "channel": {
+              "type": "uint32",
+              "id": 2,
+              "options": {
+                "default": 0
+              }
+            },
+            "response_fd": {
+              "type": "uint32",
+              "id": 3
+            },
+            "response_id": {
+              "type": "uint32",
+              "id": 4
+            }
+          }
+        },
+        "GMGetBlackListRsp": {
+          "fields": {
+            "black_list": {
+              "rule": "repeated",
+              "type": "Friend",
+              "id": 1
+            },
+            "response_fd": {
+              "type": "uint32",
+              "id": 2
+            },
+            "response_id": {
+              "type": "uint32",
+              "id": 3
+            }
+          }
+        },
+        "GMGetPushListReq": {
+          "fields": {
+            "uid": {
+              "rule": "required",
+              "type": "uint32",
+              "id": 1
+            },
+            "channel": {
+              "type": "uint32",
+              "id": 2,
+              "options": {
+                "default": 0
+              }
+            },
+            "response_fd": {
+              "type": "uint32",
+              "id": 3
+            },
+            "response_id": {
+              "type": "uint32",
+              "id": 4
+            }
+          }
+        },
+        "GMGetPushListRsp": {
+          "fields": {
+            "push_list": {
+              "rule": "repeated",
+              "type": "Friend",
+              "id": 1
+            },
+            "response_fd": {
+              "type": "uint32",
+              "id": 2
+            },
+            "response_id": {
+              "type": "uint32",
+              "id": 3
+            }
+          }
+        },
+        "MailContent": {
+          "fields": {
+            "gm_uid": {
+              "rule": "required",
+              "type": "uint32",
+              "id": 1
+            },
+            "addressee_type": {
+              "rule": "required",
+              "type": "uint32",
+              "id": 2
+            },
+            "online_ids": {
+              "rule": "repeated",
+              "type": "uint32",
+              "id": 3,
+              "options": {
+                "packed": false
+              }
+            },
+            "uids": {
+              "rule": "repeated",
+              "type": "uint32",
+              "id": 4,
+              "options": {
+                "packed": false
+              }
+            },
+            "channels": {
+              "rule": "repeated",
+              "type": "uint32",
+              "id": 5,
+              "options": {
+                "packed": false
+              }
+            },
+            "sender": {
+              "rule": "required",
+              "type": "bytes",
+              "id": 6
+            },
+            "title": {
+              "rule": "required",
+              "type": "bytes",
+              "id": 7
+            },
+            "content": {
+              "rule": "required",
+              "type": "bytes",
+              "id": 8
+            },
+            "defined_content": {
+              "type": "bytes",
+              "id": 9
+            },
+            "valid_time": {
+              "rule": "required",
+              "type": "uint32",
+              "id": 10
+            },
+            "mail_type": {
+              "rule": "required",
+              "type": "uint32",
+              "id": 11
+            },
+            "is_destroy": {
+              "rule": "required",
+              "type": "uint32",
+              "id": 12
+            },
+            "show_priority": {
+              "rule": "required",
+              "type": "MailShowPriority",
+              "id": 13
+            },
+            "is_popping": {
+              "rule": "required",
+              "type": "uint32",
+              "id": 14
+            },
+            "attachment_list": {
+              "rule": "repeated",
+              "type": "Attachment",
+              "id": 15
+            },
+            "delayed_time": {
+              "rule": "required",
+              "type": "uint32",
+              "id": 16
+            },
+            "mail_id": {
+              "type": "uint64",
+              "id": 17
+            }
+          },
+          "nested": {
+            "MailShowPriority": {
+              "values": {
+                "Normal": 0,
+                "Top": 1
+              }
+            },
+            "Attachment": {
+              "fields": {
+                "id": {
+                  "rule": "required",
+                  "type": "uint32",
+                  "id": 1
+                },
+                "count": {
+                  "rule": "required",
+                  "type": "uint32",
+                  "id": 2
+                }
+              }
+            }
+          }
+        },
+        "GMSendMailReq": {
+          "fields": {
+            "mail_content": {
+              "rule": "required",
+              "type": "MailContent",
+              "id": 1
+            }
+          }
+        },
+        "GMSendMailRsp": {
+          "fields": {
+            "mail_id": {
+              "rule": "required",
+              "type": "uint64",
+              "id": 1
+            }
+          }
+        },
+        "GMQueryUnsendMailReq": {
+          "fields": {}
+        },
+        "GMQueryUnsendMailRsp": {
+          "fields": {
+            "mail_contents": {
+              "rule": "repeated",
+              "type": "MailContent",
+              "id": 1
+            }
+          }
+        },
+        "GMDeleteUnsendMailReq": {
+          "fields": {
+            "mail_ids": {
+              "rule": "repeated",
+              "type": "uint64",
+              "id": 1,
+              "options": {
+                "packed": false
+              }
+            }
+          }
+        },
+        "GMDeleteUnsendMailRsp": {
+          "fields": {
+            "mail_ids": {
+              "rule": "repeated",
+              "type": "uint64",
+              "id": 1,
+              "options": {
+                "packed": false
+              }
+            }
+          }
+        },
+        "GMDeleteSendMailReq": {
+          "fields": {
+            "mail_ids": {
+              "rule": "repeated",
+              "type": "uint64",
+              "id": 1,
+              "options": {
+                "packed": false
+              }
+            }
+          }
+        },
+        "GMDeleteSendMailRsp": {
+          "fields": {
+            "mail_keys": {
+              "rule": "repeated",
+              "type": "bytes",
+              "id": 1
+            }
+          }
+        },
+        "GMCheckValidMailReq": {
+          "fields": {}
+        },
+        "GMCheckValidMailRsp": {
+          "fields": {
+            "mail_content": {
+              "rule": "repeated",
+              "type": "MailContent",
+              "id": 1
+            }
+          },
+          "nested": {
+            "MailContent": {
+              "fields": {
+                "mail_id": {
+                  "rule": "required",
+                  "type": "uint64",
+                  "id": 1
+                },
+                "gid": {
+                  "rule": "required",
+                  "type": "uint32",
+                  "id": 2
+                },
+                "online_id": {
+                  "rule": "required",
+                  "type": "uint32",
+                  "id": 3
+                },
+                "mail_type": {
+                  "rule": "required",
+                  "type": "uint32",
+                  "id": 4
+                },
+                "mail_sender": {
+                  "rule": "required",
+                  "type": "bytes",
+                  "id": 5
+                },
+                "mail_title": {
+                  "rule": "required",
+                  "type": "bytes",
+                  "id": 6
+                },
+                "mail_content": {
+                  "rule": "required",
+                  "type": "bytes",
+                  "id": 7
+                },
+                "mail_source": {
+                  "rule": "required",
+                  "type": "uint32",
+                  "id": 8
+                },
+                "mail_valid_time": {
+                  "rule": "required",
+                  "type": "uint32",
+                  "id": 9
+                },
+                "delayed_time": {
+                  "rule": "required",
+                  "type": "uint32",
+                  "id": 10
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

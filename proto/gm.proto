@@ -1,0 +1,484 @@
+syntax = "proto2";
+package gms;
+//用户登陆
+message GMCheckSessionReq
+{
+	required	bytes	name		= 1;
+}
+message GMCheckSessionRsp
+{
+	required	bytes	random_bytes	= 1;
+}
+message GMLoginReq
+{
+	required	bytes	random_bytes	= 1;
+	required	bytes	encrypt_bytes	= 2;			//使用用户名 + 密码 + 随机串加密
+}
+//成功返回, 错误从ErrorCode返回
+message GMLoginRsp
+{
+	optional	uint32	gid		= 1;
+}
+//获取版本信息
+message GMGetLastVersionReq
+{
+}
+message GMGetLastVersionRsp
+{
+	required	uint32		field1 = 1;
+	required	uint32		field2 = 2;
+	required	uint32		field3 = 3;
+	required	uint32		field4 = 4;
+}
+//获取全部有效服务器列表
+message GMGetAllServerListReq
+{
+}
+message ServerBase
+{
+	required	uint32	id				= 1;
+	required	bytes	ip				= 2;
+	required	uint32	port			= 3;
+	required	uint32  zone_id			= 4;
+	required	uint32  server_type		= 5;
+}
+message GMGetAllServerListRsp
+{
+	repeated	ServerBase   server_items   = 1;
+}
+//获取配置的全部的ONLINE
+message GMGetWorkAllServerListReq
+{
+}
+message ServerConfig
+{
+	required	uint32	id					= 1;		//内部唯一ID
+	required	ServerBase	gateway			= 2;		//指向的GATEWAY服务器ID
+	required	ServerBase	online			= 3;		//指向的ONLINE服务器ID
+	required	uint32	logic_id			= 4;		//服务器配置的逻辑ID
+	required	bytes	logic_name			= 5;		//服务器名称
+	required	uint32	status				= 6;		//配置的状态，目前指是否是推荐服务器
+	optional	uint32	open_time			= 7;
+	required	uint32	max_online_number	= 8;		//最大在线人数
+	required	uint32	max_all_number		= 9;		//最大注册人数
+}
+message GMGetWorkServerListRsp
+{
+	repeated	ServerConfig				server_configs = 1;
+}
+//获取服务器当前注册人数
+message GMGetServerRegisterNumberReq
+{
+	repeated	uint32						server_ids = 1;			//指定的服务器id，空表示所有服务器
+}
+message GMGetServerRegisterNumberRsp
+{
+	message NumberPair
+	{
+		required	uint32			server_id	= 1;
+		required	uint32			register_number	= 2;
+	}
+	repeated	NumberPair			number_pair	= 1;
+}
+//获取Switch上实际注册的ONLINE状态
+message GMGetOnlineInSwitchReq
+{
+	repeated	uint32			server_ids		= 1;		//可以指定特定的ONLINE，不填是全部
+}
+message GMGetOnlineInSwitchRsp
+{
+	message ServerBase
+	{
+		enum	ServerStatus
+		{
+			NORMAL			= 1;
+			DISCONNECT		= 2;
+		}
+		required	bytes			ip				= 1;
+		required	uint32			port			= 2;
+		required	uint32			server_id		= 3;
+		required	ServerStatus	status			= 4;
+		required	uint32			online_number	= 5;			//在线人数
+	}
+	repeated	ServerBase		servers = 1;
+}
+//查询用户属于哪个服务器
+message  GMQueryUserReq
+{
+	message PlayerIn
+	{
+		required	uint32		uid		= 1;
+		optional	uint32		channel = 2;
+	}
+	required	PlayerIn			players	= 1;
+}
+message GMQueryUserRsp
+{
+	required	uint32		uid			= 1;
+	optional	uint32		channel		= 2;
+	repeated	uint32		server_ids	= 3;
+}
+//查询用户是否在线,支持批量查询
+message GMQueryUserOnlineReq
+{
+	message PlayerIn
+	{
+		required	uint32		uid			= 1;
+		optional	uint32		channel		= 2;
+	}
+	repeated	PlayerIn		players = 1;
+}
+message GMQueryUserOnlineRsp
+{
+	message PlayerOut
+	{
+		enum	PlayerStatus
+		{
+			PLAYER_KICKING = 1;						//在线，但处于锁定状态
+			PLAYER_NORMAL  = 2;						//正常
+			PLAYER_KICKING_ALL = 3;					//在线，但正在被剔除
+			PLAYER_OFFLINE	= 4;					//下线
+		}
+		required	uint32			uid				= 1;
+		optional	uint32			channel			= 2;
+		required	uint32			server_id		= 3;
+		required	PlayerStatus	player_status	= 4;
+	}
+	repeated		PlayerOut	players		= 1;
+}
+//获取指定服务器线上所有用户信息, 不支持批量查询
+message GMQueryAllUserBaseInfoOnlineReq
+{
+	required	uint32			server_id	= 1;
+}
+message GMQueryAllUserBaseInfoOnlineRsp
+{
+	message Player
+	{
+		required	uint32		uid			= 1;
+		optional	uint32		channel		= 2;
+		required	uint32		status		= 3;	//用户当前状态
+	}
+	required	uint32		server_id	= 1;
+	repeated	Player		players	= 2;
+}
+//剔除在线玩家
+message GMKickUserReq
+{
+	required	uint32		uid			= 1;
+	optional	uint32		channel		= 2;
+}
+message GMKickedRsp
+{
+	required	uint32		uid			= 1;
+	optional	uint32		channel		= 2;
+	required	uint32		server_id   = 3;
+}
+//查询在线用户的信息, 这个用户镜像的信息量比较大，不支持批量查询
+message GMQueryOnlineUserInfoReq
+{
+	required	uint32		uid			= 1;
+	optional	uint32		channel		= 2;
+	optional	uint32		response_fd = 3;
+	optional	uint32		response_id = 4;
+}
+message GMQueryOnlineUserInfoRsp
+{
+	message Player
+	{
+		required	uint32	uid				= 1;
+		optional	uint32	channel			= 2;
+		optional	uint32	sex				= 3;
+		optional	uint32	seq				= 4;
+		optional	uint32	zone_id			= 5;
+		optional	uint32	client_seq		= 6;
+		optional	uint32	skin_id			= 7;
+		optional	uint32	reg_time		= 8;
+		optional	uint64	gateway_session	= 9;
+		optional	double	x				= 10;
+		optional	double	y				= 11;
+		optional	double	z				= 12;
+		optional	uint32	row				= 13;
+		optional	uint32	col				= 14;
+		optional	double	facing			= 15;
+		optional	double	pitch			= 16;
+		optional	uint32	anim_id			= 17;
+		optional	uint32	flag_pos		= 18;
+		optional	bytes	nick			= 19;
+		optional    int32	fd				= 20;
+		optional	uint32	fd_id			= 21;
+		optional	uint32	player_status	= 23;			//玩家状态
+		optional	uint32	login_time		= 24;			//登录online时间
+		optional    uint32	total_time		= 25;			//在线时长
+		optional	uint64	room_id			= 26;			//用户所在的房间
+		optional	uint32	limits_bit		= 27;			//用户在房间权限
+		optional	uint64	other_gateway_session = 28;		//当前用户正在被踢，此字段记录
+	}
+	optional	Player			player		= 1;
+	optional	uint32		response_fd = 2;
+	optional	uint32		response_id = 3;
+}
+//获取当前系统中的Tunnel server 信息, 支持批量查询
+message GMGetTunnelServerInfoReq
+{
+	message ServerKey
+	{
+		required	bytes	ip		= 1;
+		required	uint32	port	= 2;
+	}
+	repeated ServerKey		keys	= 1;			//支持批量查询，不填查全部
+}
+message GMGetTunnelServerInfoRsp
+{
+	message Room
+	{
+		required	uint64		room_id = 1;
+		required	uint32		register_number = 2;			//房间总的人数
+		required	uint32		online_number = 3;				//进入房间的人数
+		required	uint32		own_uid = 4;					//房主的UID
+	}
+	message TunnelServer
+	{
+		required	bytes	ip			= 1;
+		required	uint32	port		= 2;
+		optional	uint32	number		= 3;			//tunnel server 中的人数
+		repeated	Room	rooms		= 4;			//一个tunnel所有房间ID
+	}
+	repeated TunnelServer	servers		= 1;
+}
+//向在线用户推送消息
+message GMPushMessageReq
+{
+	required	bytes		push_message = 1;
+	repeated	uint32		server_ids	= 2;			//支持向多个服务器推送消息， 不填表示所有服务器
+}
+message GMPushMessageRsp
+{
+
+}
+
+//获取服务器当前全部房间的ID
+message GMGetAllServerRoomReq
+{
+	required uint32 server_id = 1;
+	optional uint32	response_fd = 2;
+	optional uint32	response_id = 3;
+}
+
+message GMGetAllServerRoomRsp
+{
+	repeated uint64 room_ids = 1;
+	optional uint32	response_fd = 2;
+	optional uint32	response_id = 3;
+}
+
+//获取房间详细信息
+message GMGetRoomInfoReq
+{
+	required uint32 server_id = 1;
+	required uint64 room_id = 2;
+	optional uint32	response_fd = 3;
+	optional uint32	response_id = 4;
+}
+
+message GMGetRoomInfoRsp
+{
+	message Member
+	{
+		required uint32 uid = 1;
+		optional uint32 channel = 2 [default = 0];
+		optional bytes nick = 3 [default = ""];
+	}
+	required uint64 room_id = 1;
+	required bytes room_name = 2;
+	required uint32 res_id = 3;
+	required uint32 max_mem_num = 4;
+	optional bytes password = 5 [default = ""];
+	required uint32 owner_uid = 6;
+	optional uint32 owner_channel = 7 [default = 0];
+	optional uint32 limits_bit = 8 [default = 0];
+	optional uint32 cur_mem_num = 9 [default = 0];
+	optional uint32 create_time = 10 [default = 0];
+	repeated Member members = 11;
+	optional uint32	response_fd = 12;
+	optional uint32	response_id = 13;
+}
+
+//获取用户当前星球信息
+message GMGetPlayerCraftInfoReq
+{
+	required uint32 uid = 1;
+	optional uint32 channel = 2 [default = 0];
+	optional uint32	response_fd = 3;
+	optional uint32	response_id = 4;
+}
+
+message GMGetPlayerCraftInfoRsp
+{
+	enum CraftAccess
+	{
+		VIEW_ALL_PLAYERS   = 1;                //所有玩家可见
+		VIEW_ONLY_FRIENDS  = 2;                //仅好友可见
+		VIEW_ONLY_ONESELF  = 3;                //仅自己可见
+	}
+	message CraftInfo
+	{
+		required uint64 craft_uid = 1;
+		required uint32 res_id = 2;
+		required bytes craft_name = 3;
+		optional uint32 create_time = 4;
+		optional uint32 visit_count = 5;
+		optional uint32 duration = 6;                //星球中持续时间
+		optional CraftAccess access = 7;
+		optional uint32 review_num = 8;              //星球评论总数
+	}
+	repeated CraftInfo crafts = 1;
+	optional uint64 cur_craft_uid = 2;
+	optional uint32	response_fd = 3;
+	optional uint32	response_id = 4;
+}
+
+message Friend
+{
+	required uint32 uid = 1;
+	optional uint32 channel = 2;
+}
+//获取好友列表
+message GMGetFriendListReq
+{
+	required uint32 uid = 1;
+	optional uint32 channel = 2 [default = 0];
+	optional uint32	response_fd = 3;
+	optional uint32	response_id = 4;
+}
+
+message GMGetFriendListRsp
+{
+	repeated Friend friend_list = 1; //好友列表
+	optional uint32	response_fd = 2;
+	optional uint32	response_id = 3;
+}
+
+//获取黑名单
+message GMGetBlackListReq
+{
+	required uint32 uid = 1;
+	optional uint32 channel = 2 [default = 0];
+	optional uint32	response_fd = 3;
+	optional uint32	response_id = 4;
+}
+
+message GMGetBlackListRsp
+{
+	repeated Friend black_list = 1;
+	optional uint32	response_fd = 2;
+	optional uint32	response_id = 3;
+}
+
+//获取推送列表
+message GMGetPushListReq
+{
+	required uint32 uid = 1;
+	optional uint32 channel = 2 [default = 0];
+	optional uint32	response_fd = 3;
+	optional uint32	response_id = 4;
+}
+
+message GMGetPushListRsp
+{
+	repeated Friend push_list = 1;
+	optional uint32	response_fd = 2;
+	optional uint32	response_id = 3;
+}
+///////////////////////////////////////////////////////////////
+//mail
+//Mail内容
+message MailContent
+{
+	//显示优先级
+	enum MailShowPriority
+	{
+		Normal		= 0;			//普通		
+		Top			= 1;			//置顶
+	}
+	//附件
+	message Attachment
+	{
+		required	uint32		id		= 1;				//物品的ID
+		required	uint32		count	= 2;				//数量
+	}
+	required	uint32		gm_uid			= 1;						//管理员身份
+	required	uint32		addressee_type	= 2;						//收件人的类型, 0:全服;1:指定ONLINE全部;2:指定ONLINE的用户
+	repeated	uint32		online_ids		= 3;						//指定的online, 如果addressee_type = 2, 只能指定一个online.
+	repeated	uint32		uids			= 4;						//指定的用户
+	repeated	uint32		channels		= 5;						//指定用户的渠道，通常一个online只对应一个渠道
+	required	bytes		sender			= 6;						//发件人信息
+	required	bytes		title			= 7;						//标题
+	required	bytes		content			= 8;						//内容
+	optional	bytes		defined_content = 9;						//自定义内容，用于扩展
+	required	uint32		valid_time		= 10;						//有效时间，精确到秒, 默认0
+	required	uint32		mail_type		= 11;						//邮件类型, 0 : 普通类型, 1: 带附件的邮件
+	required	uint32		is_destroy		= 12;						//阅后是否销毁, 0: 不销毁， 1：销毁，带附件的邮件，只能设为0
+	required	MailShowPriority 	show_priority	= 13;				//显示优先级
+	required	uint32		is_popping 		= 14;						//新邮件是否弹出显示
+	repeated	Attachment	attachment_list	= 15;						//附件的物品列表
+	required	uint32		delayed_time	= 16;						//延时发送的时间,离现在的时间。 0:立即发送，其他指延后多少秒发送
+	optional    uint64		mail_id			= 17;						//为了内容的完整性
+}
+//管理员发送邮件
+message GMSendMailReq
+{
+	required	MailContent		mail_content = 1;						//收件人的类型, 0:全服;1:指定ONLINE全部;2:指定ONLINE的用户
+}
+message GMSendMailRsp
+{
+	required	uint64		mail_id			= 1;						//邮件ID
+}
+//管理员查询所有未发送的邮件
+message GMQueryUnsendMailReq
+{
+}
+message GMQueryUnsendMailRsp
+{
+	repeated	MailContent		mail_contents	= 1;					//未发送mail列表
+}
+//管理员删除未发送的邮件
+message GMDeleteUnsendMailReq
+{
+	repeated	uint64			mail_ids		= 1;					//指定删除邮件的id, 未指定删除全部
+}
+message GMDeleteUnsendMailRsp
+{
+	repeated	uint64			mail_ids		= 1;					//成功删除的mail id
+}
+//管理员紧急删除已经发送的邮件
+message GMDeleteSendMailReq
+{
+	repeated 	uint64 			mail_ids 		= 1;
+}
+message GMDeleteSendMailRsp
+{
+	repeated	bytes 			mail_keys 		= 1;
+}
+//查看有效期内的邮件
+message GMCheckValidMailReq
+{
+}
+message GMCheckValidMailRsp
+{
+	message MailContent
+	{
+		required  uint64 		mail_id = 1;
+		required  uint32		gid = 2;
+		required  uint32 		online_id = 3;
+		required  uint32 		mail_type = 4;
+		required  bytes			mail_sender = 5;
+		required  bytes			mail_title = 6;
+		required  bytes  		mail_content = 7;
+		required  uint32 		mail_source = 8;
+		required  uint32 		mail_valid_time = 9;
+		required  uint32 		delayed_time = 10;
+	}
+	repeated 	MailContent		mail_content	= 1;
+}
+
