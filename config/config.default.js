@@ -7,7 +7,7 @@ module.exports = appInfo => {
   config.keys = appInfo.name + '_1542790408305_3363';
 
   // add your config here
-  config.middleware = [];
+  config.middleware = [ 'errorHandler', 'pagination' ];
 
   config.cors = {
     origin: '*',
@@ -22,12 +22,30 @@ module.exports = appInfo => {
     },
   };
 
+  config.bcrypt = {
+    saltRounds: 10, // default 10
+  };
+
+  config.jwt = {
+    secret: 'gm-gateway',
+    enable: true, // default is false
+    match: '/jwt', // optional
+  };
+
+  // change to your own sequelize configurations
+  config.sequelize = {
+    dialect: 'mysql',
+    hostname: '127.0.0.1',
+    port: 3306,
+    database: 'gm_dev',
+  };
+
   config.gmClientManager = {
-    host: '172.16.0.17',
-    port: 23001,
+    host: '127.0.0.1',
+    port: 7002,
     concurrency: 1,
-    username: 'admin',
-    password: 'admin',
+    username: '******',
+    password: '******',
   };
 
   return config;

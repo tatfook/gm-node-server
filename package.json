@@ -7,6 +7,7 @@
     "async": "^2.6.1",
     "blueimp-md5": "^2.10.0",
     "egg": "^2.2.1",
+    "egg-bcrypt": "^1.1.0",
     "egg-cors": "^2.1.1",
     "egg-jwt": "^3.1.4",
     "egg-parameters": "^0.1.0",
@@ -14,6 +15,7 @@
     "egg-sequelize": "^4.2.0",
     "js-base64": "^2.4.9",
     "mysql2": "^1.6.4",
+    "pluralize": "^7.0.0",
     "protobufjs": "^6.8.8",
     "socket.io-client": "^2.1.1",
     "uuid": "^3.3.2"
@@ -24,17 +26,17 @@
     "egg-bin": "^4.3.5",
     "egg-ci": "^1.8.0",
     "egg-mock": "^3.14.0",
-    "eslint": "^4.11.0",
-    "eslint-config-egg": "^6.0.0",
+    "eslint": "^4.18.0",
+    "eslint-config-egg": "^7.0.0",
     "jsdoc": "^3.5.5"
   },
   "engines": {
     "node": ">=8.9.0"
   },
   "scripts": {
-    "start": "egg-scripts start --daemon --title=egg-server-qq-internal-http-proxy",
+    "start": "egg-scripts start --daemon --title=egg-server-qq-internal-http-proxy --workders 1 --port 8000",
     "stop": "egg-scripts stop --title=egg-server-qq-internal-http-proxy",
-    "dev": "egg-bin dev",
+    "dev": "egg-bin dev --workders 1",
     "debug": "egg-bin debug",
     "test": "npm run lint -- --fix && npm run test-local",
     "test-local": "egg-bin test",
