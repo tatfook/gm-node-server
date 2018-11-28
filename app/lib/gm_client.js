@@ -2,6 +2,7 @@
 const net = require('net');
 const ProtoBuf = require('protobufjs');
 const Base64 = require('js-base64').Base64;
+const md5 = require('blueimp-md5');
 
 const Root = ProtoBuf.Root.fromJSON(require('../../proto/bundle.json'));
 const CSMessageHeader = Root.lookupType('CSMessageHeader');
@@ -12,6 +13,7 @@ class HallClient {
     this.host = host;
     this.port = port;
     this.callbackMap = new Map();
+    this.session;
     const sleep = n => new Promise(resolve => setTimeout(resolve, n));
     this.messageQueue = new queue(async (data, next) => {
       this.send(data);
@@ -32,26 +34,26 @@ class HallClient {
   }
 
   async checkSession(options) {
-    const decoded = await this.sendMessage('GMCheckSessionReq', options);
-    return decoded.random_bytes.toString();
+    const res = await this.sendMessage('gms.GMCheckSessionReq', options);
+    if (res.data) {
+      return res.data.random_bytes.toString();
+    }
+    throw res.error;
   }
 
   async login(options) {
-    try {
-      const secrect = await this.checkSession({
-        name: options.username,
-      });
-      const reqData = {
-        random_bytes: secrect,
-        encrypt_bytes: options.username + options.password + secrect,
-      };
-      const decoded = await this.sendMessage('GMLoginReq', reqData);
-      console.log('gid: ', decoded.gid.toString());
+    const secrect = await this.checkSession({
+      name: Base64.encode(options.username),
+    });
+    const reqData = {
+      random_bytes: Base64.encode(secrect),
+      encrypt_bytes: Base64.encode(md5(options.username + options.password + secrect)),
+    };
+    const res = await this.sendMessage('gms.GMLoginReq', reqData);
+    if (res.data) {
       return true;
-    } catch (err) {
-      console.error(err);
-      return false;
     }
+    throw res.error;
   }
 
   async send(message) {
@@ -65,19 +67,21 @@ class HallClient {
         rspBuf,
       } = await this.decode(data);
       const rspHeader = CSMessageHeader.decode(headerBuf);
-      const gatewaySession = rspHeader.gateway_session.toString();
-      const callback = this.callbackMap.get(gatewaySession);
-      this.callbackMap.delete(gatewaySession);
+      const seqNum = rspHeader.seq_num.toString();
+      if (!this.session) this.session = rspHeader.gateway_session;
+      const callback = this.callbackMap.get(seqNum);
+      this.callbackMap.delete(seqNum);
       if (!callback) {
-        console.error('Missing callback for session ', gatewaySession);
+        console.error('Missing callback for seqNum: ', seqNum);
         return;
       }
       if (rspHeader.errcode) {
         return callback({
-          error: new Error('Game Server Error: ', rspHeader.errcode),
+          error: new Error('Game Server Error: ' + rspHeader.errcode),
         });
       }
       const rspClassName = rspHeader.msg_name.toString();
+      console.log(`Callback type: ${rspClassName}, seqNum: ${seqNum}`);
       const decoded = Root.lookupType(rspClassName).decode(rspBuf);
       return callback({
         data: decoded,
@@ -113,23 +117,26 @@ class HallClient {
   async sendMessage(reqType, reqData) {
     const reqProtoClass = Root.lookupType(reqType);
     if (!reqProtoClass) throw new Error('Invalide reqType: ', reqType);
-    const gatewaySession = this.generateGatewaySession();
+    const seqNum = this.generateSeqNum();
     const msgHeader = {
       msg_name: Base64.encode(reqType),
-      gateway_session: gatewaySession,
+      seq_num: seqNum,
     };
+    if (this.session) msgHeader.gateway_session = this.session;
+
     const reqBuf = reqProtoClass.encode(reqData).finish();
     const message = await this.encode(msgHeader, reqBuf);
     this.messageQueue.push(message);
-    return new Promise(resolve => this.callbackMap.set(gatewaySession, data => resolve(data)));
+    console.log(`Sending type: ${reqType}, seqNum: ${seqNum}`);
+    return new Promise(resolve => this.callbackMap.set(seqNum, data => resolve(data)));
   }
 
-  generateGatewaySession() {
-    let gatewaySession = `${Date.now()}${Math.ceil(Math.random() * 100)}`;
-    while (this.callbackMap.get(gatewaySession)) {
-      gatewaySession = `${Date.now()}${Math.ceil(Math.random() * 100)}`;
+  generateSeqNum() {
+    let seqNum = Math.ceil(Math.random() * 1000000);
+    while (this.callbackMap.get(seqNum)) {
+      seqNum = Math.ceil(Math.random() * 1000000);
     }
-    return gatewaySession;
+    return seqNum.toString();
   }
 
   waitingListSize() {

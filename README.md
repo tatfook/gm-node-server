@@ -8,11 +8,7 @@ see [egg docs][egg] for more detail.
 
 ### Development
 
-```bash
-$ npm i
-$ npm run dev
-$ open http://localhost:7001/
-```
+新建config.local.js, 并配置gmClientManager
 
 rebuild proto
 
@@ -20,7 +16,16 @@ rebuild proto
 $ node_modules/protobufjs/bin/pbjs --keep-case proto/**/*.proto > proto/bundle.json
 ```
 
+
+```bash
+$ npm i
+$ npm run dev
+$ open http://localhost:7001/
+```
+
 ### Deploy
+
+新建config.prod.js, 并配置gmClientManager
 
 ```bash
 $ npm start
