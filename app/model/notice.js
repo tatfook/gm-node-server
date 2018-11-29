@@ -15,10 +15,6 @@ module.exports = app => {
       primaryKey: true,
     },
 
-    nid: {
-      type: STRING(64),
-    },
-
     adminId: {
       type: BIGINT,
     },

@@ -4,8 +4,14 @@
 const Service = require('egg').Service;
 
 class GmUserService extends Service {
-  async queryUser(options) {
+  async queryUser(uid) {
     const client = await this.app.gmClientManager();
+    const options = {
+      players: {
+        uid,
+        channel: 0,
+      },
+    };
     const res = await client.send('gms.GMQueryUserReq', options);
     if (res.data) {
       console.log('user list: ', JSON.stringify(res.data));

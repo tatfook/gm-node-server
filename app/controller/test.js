@@ -7,7 +7,7 @@ class TestController extends Controller {
     const { ctx, service } = this;
     // const res = await service.gm.server.getWorkServerList();
     // const res = await service.gm.user.getServerOnlineUsers(ctx.params.server_id);
-    const res = await service.gm.mail.checkValidMail(ctx.params);
+    const res = await service.gm.user.queryUser(ctx.params.uid);
     ctx.helper.success({ ctx, res });
   }
 }

@@ -16,10 +16,6 @@ module.exports = {
         primaryKey: true,
       },
 
-      nid: {
-        type: STRING(64),
-      },
-
       adminId: {
         type: BIGINT,
       },

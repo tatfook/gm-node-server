@@ -11,6 +11,7 @@ module.exports = app => {
   router.get(prefix + 'current', app.jwt, controller.session.current);
 
   router.post(prefix + 'admin/emails/:id/send', app.jwt, controller.admin.email.send);
+  router.post(prefix + 'admin/notices/:id/send', app.jwt, controller.admin.notice.send);
 
   const admin = controller.admin.resource;
   router.post(prefix + 'admin/:resources/search', app.jwt, admin.search);
