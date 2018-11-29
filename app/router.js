@@ -4,14 +4,13 @@ module.exports = app => {
   const prefix = '/v0/';
   const { router, controller } = app;
 
-  router.get(prefix + 'test', controller.test.index);
+  router.post(prefix + 'test', controller.test.index);
 
   router.post(prefix + 'login', controller.session.login);
   router.post(prefix + 'logout', controller.session.logout);
   router.get(prefix + 'current', app.jwt, controller.session.current);
 
-  router.resources(prefix + 'admin/emails', app.jwt, controller.admin.email);
-  router.post(prefix + 'admin/emails/search', app.jwt, controller.admin.email.search);
+  router.post(prefix + 'admin/emails/:id/send', app.jwt, controller.admin.email.send);
 
   const admin = controller.admin.resource;
   router.post(prefix + 'admin/:resources/search', app.jwt, admin.search);

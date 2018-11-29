@@ -16,9 +16,16 @@ module.exports = {
         primaryKey: true,
       },
 
-      title: {
+      nid: {
+        type: STRING(64),
+      },
+
+      adminId: {
+        type: BIGINT,
+      },
+
+      serverIds: {
         type: STRING(1024),
-        allowNull: false,
       },
 
       content: {
@@ -41,6 +48,10 @@ module.exports = {
         type: DATE,
         allowNull: false,
       },
+    }, {
+      underscored: false,
+      charset: 'utf8mb4',
+      collate: 'utf8mb4_bin',
     });
   },
 

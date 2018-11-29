@@ -398,7 +398,7 @@ message MailContent
 	//显示优先级
 	enum MailShowPriority
 	{
-		Normal		= 0;			//普通		
+		Normal		= 0;			//普通
 		Top			= 1;			//置顶
 	}
 	//附件

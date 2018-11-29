@@ -8,12 +8,11 @@ const Root = ProtoBuf.Root.fromJSON(require('../../proto/bundle.json'));
 const CSMessageHeader = Root.lookupType('CSMessageHeader');
 const queue = require('async/queue');
 
-class HallClient {
+class GMClient {
   constructor(host, port) {
     this.host = host;
     this.port = port;
     this.callbackMap = new Map();
-    this.session;
     const sleep = n => new Promise(resolve => setTimeout(resolve, n));
     this.messageQueue = new queue(async (data, next) => {
       this.send(data);
@@ -51,6 +50,7 @@ class HallClient {
     };
     const res = await this.sendMessage('gms.GMLoginReq', reqData);
     if (res.data) {
+      this.gid = res.data.gid.toString();
       return true;
     }
     throw res.error;
@@ -142,6 +142,10 @@ class HallClient {
   waitingListSize() {
     return this.callbackMap.size;
   }
+
+  gmId() {
+    return this.gid;
+  }
 }
 
-module.exports = HallClient;
+module.exports = GMClient;

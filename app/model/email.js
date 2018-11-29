@@ -6,7 +6,6 @@ module.exports = app => {
     STRING,
     INTEGER,
     DATE,
-    VIRTUAL,
   } = app.Sequelize;
 
   const Email = app.model.define('emails', {
@@ -14,6 +13,28 @@ module.exports = app => {
       type: BIGINT,
       autoIncrement: true,
       primaryKey: true,
+    },
+
+    mid: {
+      type: BIGINT,
+    },
+
+    adminId: {
+      type: BIGINT,
+    },
+
+    addresseeType: {
+      type: INTEGER,
+      default: 0,
+    },
+
+    receivers: {
+      type: STRING(1024),
+    },
+
+    sender: {
+      type: STRING(64),
+      allowNull: false,
     },
 
     title: {
@@ -26,15 +47,46 @@ module.exports = app => {
       allowNull: false,
     },
 
-    status: {
+    mailType: {
       type: INTEGER,
-      default: 0,
       allowNull: false,
+      default: 0,
     },
 
-    userIds: {
-      type: VIRTUAL,
-      default: [],
+    attachments: {
+      type: STRING(64),
+    },
+
+    status: {
+      type: INTEGER,
+      allowNull: false,
+      default: 0,
+    },
+
+    validTime: {
+      type: INTEGER,
+    },
+
+    showPriority: {
+      type: INTEGER,
+      allowNull: false,
+      default: 0,
+    },
+
+    isDestroy: {
+      type: INTEGER,
+      allowNull: false,
+      default: 0,
+    },
+
+    isPopping: {
+      type: INTEGER,
+      allowNull: false,
+      default: 0,
+    },
+
+    delayAt: {
+      type: DATE,
     },
 
     createdAt: {
@@ -46,26 +98,36 @@ module.exports = app => {
       type: DATE,
       allowNull: false,
     },
+  }, {
+    underscored: false,
+    charset: 'utf8mb4',
+    collate: 'utf8mb4_bin',
   });
 
-  Email.associate = () => {
-    app.model.Email.belongsToMany(app.model.User, {
-      as: 'users',
-      through: app.model.UserEmail,
-    });
+  Email.prototype.parseOnlineIds = obj => {
+    if (obj.addresseeType === 1) {
+      return obj.receivers.split(',');
+    } else if (obj.addresseeType === 2) {
+      return [ obj.receivers.split(':')[0] ];
+    }
   };
 
-  Email.hook('afterCreate', obj => {
-    if (obj.userIds) {
-      obj.setUsers(obj.userIds);
-    }
-  });
+  Email.prototype.parseUids = obj => {
+    if (obj.addresseeType === 2) return obj.receivers.split(':')[1].split(',');
+  };
 
-  Email.hook('afterUpdate', obj => {
-    if (obj.userIds) {
-      obj.setUsers(obj.userIds);
+  Email.prototype.getDelayTime = obj => {
+    return obj.delayAt ? obj.delayAt - obj.createdAt : 0;
+  };
+
+  Email.prototype.getAttachments = obj => {
+    if (obj.mailType === 1) {
+      return obj.attachments.split(',').map(att => {
+        const attrs = att.split(':');
+        return { id: attrs[0], count: attrs[1] };
+      });
     }
-  });
+  };
 
   return Email;
 };

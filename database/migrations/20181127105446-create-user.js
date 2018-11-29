@@ -42,6 +42,10 @@ module.exports = {
         type: DATE,
         allowNull: false,
       },
+    }, {
+      underscored: false,
+      charset: 'utf8mb4',
+      collate: 'utf8mb4_bin',
     });
 
     await queryInterface.addIndex('users', { fields: [ 'uid', 'username', 'loginTime', 'totalTime' ], name: 'indexOfUser' });

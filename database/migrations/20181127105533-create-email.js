@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = {
-  up: (queryInterface, Sequelize) => {
+  up: async (queryInterface, Sequelize) => {
     const {
       BIGINT,
       STRING,
@@ -9,11 +9,33 @@ module.exports = {
       DATE,
     } = Sequelize;
 
-    return queryInterface.createTable('emails', {
+    await queryInterface.createTable('emails', {
       id: {
         type: BIGINT,
         autoIncrement: true,
         primaryKey: true,
+      },
+
+      mid: {
+        type: BIGINT,
+      },
+
+      adminId: {
+        type: BIGINT,
+      },
+
+      addresseeType: {
+        type: INTEGER,
+        default: 0,
+      },
+
+      receivers: {
+        type: STRING(1024),
+      },
+
+      sender: {
+        type: STRING(64),
+        allowNull: false,
       },
 
       title: {
@@ -26,10 +48,46 @@ module.exports = {
         allowNull: false,
       },
 
+      mailType: {
+        type: INTEGER,
+        allowNull: false,
+        default: 0,
+      },
+
+      attachments: {
+        type: STRING(64),
+      },
+
       status: {
         type: INTEGER,
-        default: 0,
         allowNull: false,
+        default: 0,
+      },
+
+      validTime: {
+        type: INTEGER,
+      },
+
+      showPriority: {
+        type: INTEGER,
+        allowNull: false,
+        default: 0,
+      },
+
+      isDestroy: {
+        type: INTEGER,
+        allowNull: false,
+        default: 0,
+      },
+
+      isPopping: {
+        type: INTEGER,
+        allowNull: false,
+        default: 0,
+      },
+
+      delayAt: {
+        type: DATE,
       },
 
       createdAt: {
@@ -41,6 +99,10 @@ module.exports = {
         type: DATE,
         allowNull: false,
       },
+    }, {
+      underscored: false,
+      charset: 'utf8mb4',
+      collate: 'utf8mb4_bin',
     });
   },
 
