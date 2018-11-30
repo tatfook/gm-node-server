@@ -35,7 +35,7 @@
   },
   "scripts": {
     "start": "egg-scripts start --daemon --title=egg-server-gm-node --workers 1 --port 8000",
-    "stop": "egg-scripts stop --title=egg-server-qq-internal-http-proxy",
+    "stop": "egg-scripts stop --title=egg-server-gm-node",
     "dev": "egg-bin dev --workders 1",
     "debug": "egg-bin debug",
     "test": "npm run lint -- --fix && npm run test-local",
