@@ -1,41 +1,56 @@
 # gm-node-server
 
-## QuickStart
+### 本地开发
 
-<!-- add docs here for user -->
+1. 修改配置
+添加config.local.js
+修改基础配置
 
-see [egg docs][egg] for more detail.
+2. 更新数据库表
+> 使用sequelize指令前，先npm install -g sequelize-cli
 
-### Development
-
-新建config.local.js, 并配置gmClientManager
-
-rebuild proto
-
+如果数据库未创建
 ```bash
-$ node_modules/protobufjs/bin/pbjs --keep-case proto/**/*.proto > proto/bundle.json
+sequelize db:create
+sequelize db:migrate
+sequelize db:seed:all
 ```
 
+如果已经创建
+```bash
+sequelize db:migrate
+```
 
+3. 启动服务
 ```bash
 $ npm i
 $ npm run dev
 $ open http://localhost:7001/
 ```
 
-### Deploy
+### 部署
 
-新建config.prod.js, 并配置gmClientManager
+1. 修改配置
+添加config.prod.js
+
+2. 更新mysql数据表
+> 使用sequelize指令前，先npm install -g sequelize-cli
+
+如果数据库未创建
+```bash
+NODE_ENV=production sequelize db:create
+NODE_ENV=production sequelize db:migrate
+NODE_ENV=production sequelize db:seed:all
+```
+
+如果已经创建
+```bash
+NODE_ENV=production sequelize db:migrate
+```
+
+3. 启动服务
 
 ```bash
 $ npm start
 $ npm stop
 ```
-
-### npm scripts
-
-- Use `npm run lint` to check code style.
-- Use `npm test` to run unit test.
-- Use `npm run autod` to auto detect dependencies upgrade, see [autod](https://www.npmjs.com/package/autod) for more detail.
-
-[egg]: https://eggjs.org

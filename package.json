@@ -1,5 +1,5 @@
 {
-  "name": "qq-internal-http-proxy",
+  "name": "gm-node-server",
   "version": "1.0.0",
   "description": "",
   "private": true,
@@ -34,7 +34,7 @@
     "node": ">=8.9.0"
   },
   "scripts": {
-    "start": "egg-scripts start --daemon --title=egg-server-qq-internal-http-proxy --workders 1 --port 8000",
+    "start": "egg-scripts start --daemon --title=egg-server-gm-node --workers 1 --port 8000",
     "stop": "egg-scripts stop --title=egg-server-qq-internal-http-proxy",
     "dev": "egg-bin dev --workders 1",
     "debug": "egg-bin debug",
