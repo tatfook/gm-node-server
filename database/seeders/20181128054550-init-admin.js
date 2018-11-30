@@ -7,8 +7,8 @@ module.exports = {
       username: 'admin',
       role: 'admin',
       encryptPassword: bcrypt.hashSync('123123', 10),
-      createdAt: new Date().toLocaleString(),
-      updatedAt: new Date().toLocaleString(),
+      createdAt: '2018-11-30 10:00:00',
+      updatedAt: '2018-11-30 10:00:00',
     }], {});
   },
 
