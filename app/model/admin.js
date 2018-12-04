@@ -52,18 +52,14 @@ module.exports = app => {
     collate: 'utf8mb4_bin',
   });
 
-  Admin.hook('beforeCreate', admin => {
-    admin.encryptPassword = bcrypt.hashSync(admin.password);
-  });
-
-  Admin.hook('beforeUpdate', admin => {
+  Admin.hook('beforeValidate', admin => {
     if (admin.password) {
       admin.encryptPassword = bcrypt.hashSync(admin.password);
     }
   });
 
   Admin.entity = async obj => {
-    obj.password = undefined;
+    obj.encryptPassword = undefined;
     return obj;
   };
 

@@ -113,7 +113,7 @@ class ResourceController extends Controller {
     this.parseParams();
     const params = this.ctx.request.body;
 
-    const data = await this.resource.create(params);
+    const data = await this.resource.create(params, { individualHooks: true });
 
     return this.success(await this.entity(data));
   }
