@@ -38,6 +38,7 @@ module.exports = appInfo => {
     host: '127.0.0.1',
     port: 3306,
     database: 'gm_dev',
+    timezone: '+08:00',
   };
 
   config.gmClientManager = {

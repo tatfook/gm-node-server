@@ -24,11 +24,21 @@ class GmServerService extends Service {
     throw res.error;
   }
 
-  async getServerRegisterNumber(options) {
+  async getServerRegisterNumber(options = {}) {
     const client = await this.app.gmClientManager();
     const res = await client.send('gms.GMGetServerRegisterNumberReq', options);
     if (res.data) {
       console.log('Server Register Number: ', JSON.stringify(res.data));
+      return res.data;
+    }
+    throw res.error;
+  }
+
+  async getOnlineInSwitchReq(options = {}) {
+    const client = await this.app.gmClientManager();
+    const res = await client.send('gms.GMGetOnlineInSwitchReq', options);
+    if (res.data) {
+      // console.log('Server Register Number: ', JSON.stringify(res.data));
       return res.data;
     }
     throw res.error;
