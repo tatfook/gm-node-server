@@ -51,7 +51,7 @@ module.exports = app => {
     collate: 'utf8mb4_bin',
   });
 
-  Online.hook('beforeCreate', online => {
+  Online.hook('beforeValidate', online => {
     online.date = NOW();
     const [ year, month, day ] = online.date.split('-');
     online.year = Number(year);
