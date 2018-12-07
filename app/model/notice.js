@@ -31,7 +31,7 @@ module.exports = app => {
 
     status: {
       type: INTEGER,
-      default: 0,
+      defaultValue: 0,
       allowNull: false,
     },
 
@@ -48,6 +48,21 @@ module.exports = app => {
     underscored: false,
     charset: 'utf8mb4',
     collate: 'utf8mb4_bin',
+  });
+
+  Notice.hook('afterUpdate', async notice => {
+    if (notice.status === 1) {
+      const detail = JSON.stringify({
+        content: notice.content,
+      });
+      await app.model.Log.create({
+        resourceId: notice.id,
+        type: 'notice',
+        operatorID: notice.adminId,
+        detail,
+        createdAt: notice.updatedAt,
+      });
+    }
   });
 
   return Notice;

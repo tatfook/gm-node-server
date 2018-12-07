@@ -25,7 +25,7 @@ module.exports = app => {
 
     addresseeType: {
       type: INTEGER,
-      default: 0,
+      defaultValue: 0,
     },
 
     receivers: {
@@ -50,7 +50,7 @@ module.exports = app => {
     mailType: {
       type: INTEGER,
       allowNull: false,
-      default: 0,
+      defaultValue: 0,
     },
 
     attachments: {
@@ -60,7 +60,7 @@ module.exports = app => {
     status: {
       type: INTEGER,
       allowNull: false,
-      default: 0,
+      defaultValue: 0,
     },
 
     validTime: {
@@ -70,19 +70,19 @@ module.exports = app => {
     showPriority: {
       type: INTEGER,
       allowNull: false,
-      default: 0,
+      defaultValue: 0,
     },
 
     isDestroy: {
       type: INTEGER,
       allowNull: false,
-      default: 0,
+      defaultValue: 0,
     },
 
     isPopping: {
       type: INTEGER,
       allowNull: false,
-      default: 0,
+      defaultValue: 0,
     },
 
     delayAt: {
@@ -128,6 +128,25 @@ module.exports = app => {
       });
     }
   };
+
+  Email.hook('afterUpdate', async email => {
+    if (email.status === 1) {
+      const detail = JSON.stringify({
+        sender: email.sender,
+        receivers: email.receivers,
+        title: email.title,
+        content: email.content,
+      });
+
+      await app.model.Log.create({
+        resourceId: email.id,
+        type: 'email',
+        operatorId: email.adminId,
+        detail,
+        createdAt: email.updatedAt,
+      });
+    }
+  });
 
   return Email;
 };

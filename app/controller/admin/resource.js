@@ -53,6 +53,8 @@ class ResourceController extends Controller {
   ensureAdmin() {
     const user = this.enauthenticated();
     if (user.role !== 'admin') this.ctx.throw(403, 'not admin');
+
+    return user;
   }
 
   async entity(data) {
