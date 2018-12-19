@@ -45,7 +45,7 @@ class saveMaxOnlineNumber extends Subscription {
   }
 
   async subscribe() {
-    // await this.saveMaxOnlineNumberToDB();
+    await this.saveMaxOnlineNumberToDB();
   }
 }
 
