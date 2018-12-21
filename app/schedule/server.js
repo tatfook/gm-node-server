@@ -3,13 +3,6 @@
 const Subscription = require('egg').Subscription;
 
 class saveMaxOnlineNumber extends Subscription {
-  static get schedule() {
-    return {
-      cron: '59 * * * * *',
-      type: 'worker',
-    };
-  }
-
   async loadMaxOnlineNumberFromDB(date) {
     const { ctx } = this;
     const [ online ] = await ctx.model.Online
@@ -49,4 +42,7 @@ class saveMaxOnlineNumber extends Subscription {
   }
 }
 
-module.exports = saveMaxOnlineNumber;
+module.exports = app => {
+  saveMaxOnlineNumber.schedule = app.config.server.schedule;
+  return saveMaxOnlineNumber;
+};
