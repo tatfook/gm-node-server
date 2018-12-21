@@ -28,10 +28,10 @@ class saveMaxOnlineNumber extends Subscription {
   }
 
   async saveMaxOnlineNumberToDB() {
-    const { ctx, loadMaxOnlineNumberFromDB, getCurrentOnlineNumber } = this;
+    const { ctx } = this;
     const date = ctx.helper.getToday();
-    const max_online_number = await loadMaxOnlineNumberFromDB(date);
-    const current_online_number = await getCurrentOnlineNumber();
+    const max_online_number = await this.loadMaxOnlineNumberFromDB(date);
+    const current_online_number = await this.getCurrentOnlineNumber();
     if (current_online_number > max_online_number) {
       await this.saveToDB(current_online_number, date);
     }
