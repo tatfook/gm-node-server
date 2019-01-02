@@ -37,6 +37,14 @@ module.exports = appInfo => {
     match: '/jwt', // optional
   };
 
+  config.server = {
+    schedule: {
+      cron: '59 * * * * *',
+      type: 'worker',
+      immediate: 'true',
+    },
+  };
+
   // change to your own sequelize configurations
   config.sequelize = {
     dialect: 'mysql',
