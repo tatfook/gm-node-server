@@ -39,5 +39,12 @@ module.exports = app => {
     collate: 'utf8mb4_bin',
   });
 
+  Log.associate = () => {
+    app.model.Log.belongsTo(app.model.Admin, {
+      as: 'operator',
+      foreignKey: 'operatorId',
+    });
+  };
+
   return Log;
 };

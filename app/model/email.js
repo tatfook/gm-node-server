@@ -104,6 +104,10 @@ module.exports = app => {
     collate: 'utf8mb4_bin',
   });
 
+  Email.associate = () => {
+    app.model.Email.belongsTo(app.model.Admin);
+  };
+
   Email.prototype.parseOnlineIds = obj => {
     if (obj.addresseeType === 1) {
       return obj.receivers.split(',');

@@ -50,6 +50,10 @@ module.exports = app => {
     collate: 'utf8mb4_bin',
   });
 
+  Notice.associate = () => {
+    app.model.Notice.belongsTo(app.model.Admin);
+  };
+
   Notice.hook('afterUpdate', async notice => {
     if (notice.status === 1) {
       const detail = JSON.stringify({

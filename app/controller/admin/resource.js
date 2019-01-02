@@ -12,33 +12,6 @@ class ResourceController extends Controller {
     if (!this.resource) this.ctx.throw(400, 'args error');
   }
 
-  formatQuery(query) {
-    const Op = this.app.Sequelize.Op;
-    for (const key in query) {
-      const arr = key.split('-');
-      if (arr.length !== 2) continue;
-
-      const val = query[key];
-      delete query[key];
-
-      const newkey = arr[0];
-      const op = arr[1];
-      const oldval = query[newkey];
-
-      if (!_.isPlainObject(oldval)) {
-        query[newkey] = {};
-        if (oldval) {
-          query[newkey][Op.eq] = oldval;
-        }
-      }
-      query[newkey][Op[op]] = val;
-    }
-  }
-
-  get queryOptions() {
-    return this.ctx.state.queryOptions;
-  }
-
   currentUser() {
     return this.ctx.state.user.data;
   }
@@ -75,25 +48,15 @@ class ResourceController extends Controller {
     await this.ensureAdmin();
     await this.parseParams();
     const query = this.ctx.request.body || {};
-
-    this.formatQuery(query);
-
-    const list = await this.resource.findAndCount({ ...this.queryOptions, where: query });
-    const rows = list.rows.map(async row => await this.entity(row));
-
-    list.rows = await Promise.all(rows);
+    const list = await this.resource.findAndCount(query);
     this.success(list);
   }
 
   async index() {
     this.ensureAdmin();
     this.parseParams();
-
     const query = this.ctx.query || {};
-    const list = await this.resource.findAndCount(_.merge({}, this.queryOptions, { where: query }));
-    const rows = list.rows.map(async row => await this.entity(row));
-
-    list.rows = await Promise.all(rows);
+    const list = await this.resource.findAndCount({ where: query });
     this.success(list);
   }
 

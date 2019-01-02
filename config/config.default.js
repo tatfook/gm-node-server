@@ -7,7 +7,12 @@ module.exports = appInfo => {
   config.keys = appInfo.name + '_1542790408305_3363';
 
   // add your config here
-  config.middleware = [ 'errorHandler', 'pagination' ];
+  config.middleware = [ 'errorHandler' ];
+
+  config.parameters = {
+    // param names that you want filter in log.
+    filterParameters: [ 'password' ],
+  };
 
   config.cors = {
     origin: '*',
