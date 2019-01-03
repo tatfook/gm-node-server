@@ -62,7 +62,7 @@ module.exports = app => {
       await app.model.Log.create({
         resourceId: notice.id,
         type: 'notice',
-        operatorID: notice.adminId,
+        operatorId: notice.adminId,
         detail,
         createdAt: notice.updatedAt,
       });
